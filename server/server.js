@@ -8,6 +8,8 @@ const app = express();
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const roomRoutes = require("./routes/roomRoutes");
+const complaintRoutes = require("./routes/complaintRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -15,6 +17,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/rooms", roomRoutes);
+app.use("/api/complaints", complaintRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 console.log("MONGO_URI:", process.env.MONGO_URI);
 
