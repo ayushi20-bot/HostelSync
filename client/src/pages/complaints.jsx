@@ -40,6 +40,20 @@ function Complaints() {
     }
   };
 
+  const updateStatus = async (id, status) => {
+    try {
+      await API.put(`/complaints/${id}`, {
+        status,
+      });
+
+      const res = await API.get("/complaints");
+      setComplaints(res.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -73,7 +87,15 @@ function Complaints() {
         <div key={complaint._id}>
           <h3>{complaint.title}</h3>
           <p>{complaint.description}</p>
-          <p>Status: {complaint.status}</p>
+              <select
+          value={complaint.status}
+          onChange={(e) =>
+            updateStatus(complaint._id, e.target.value)
+          }
+        >
+          <option value="pending">Pending</option>
+          <option value="resolved">Resolved</option>
+        </select>
         </div>
       ))}
     </>
