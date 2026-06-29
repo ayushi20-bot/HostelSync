@@ -2,8 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const protect = require("../middleware/authMiddleware");
-const { getMyRoom } = require("../controllers/userController");
-
+const {
+  getMyRoom,
+  getProfile,
+} = require("../controllers/userController");
 router.get("/my-room", protect, getMyRoom);
+
+router.get("/profile", protect, getProfile);
 
 module.exports = router;

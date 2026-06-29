@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Rooms from "./pages/Rooms";
@@ -60,7 +60,10 @@ function App() {
           }
         />
 
+        <Route path="/profile" element={<Profile />} />
+
       </Routes>
+
     </BrowserRouter>
   );
 }
