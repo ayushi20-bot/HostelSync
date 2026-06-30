@@ -4,6 +4,7 @@ import API from "../services/api";
 
 function AdminDashboard() {
   const [complaints, setComplaints] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -41,6 +42,16 @@ function AdminDashboard() {
     (c) => c.status === "resolved"
   ).length;
 
+  const filteredComplaints = complaints.filter((complaint) => {
+    const searchText = search.toLowerCase();
+
+    return (
+      complaint.title.toLowerCase().includes(searchText) ||
+      complaint.student?.name.toLowerCase().includes(searchText) ||
+      complaint.room?.roomNumber.toLowerCase().includes(searchText)
+    );
+  });
+
   return (
     <>
       <Navbar />
@@ -50,6 +61,22 @@ function AdminDashboard() {
         <h1 className="text-4xl font-bold mb-8">
           Admin Dashboard
         </h1>
+
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="🔍 Search by title, student or room..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full md:w-96 border rounded-lg p-3 shadow-sm"
+        />
+      </div>
+
+      <select>
+        <option>All</option>
+        <option>Pending</option>
+        <option>Resolved</option>
+      </select>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
@@ -98,7 +125,7 @@ function AdminDashboard() {
 
             <tbody>
 
-              {complaints.map((complaint) => (
+              {filteredComplaints.map((complaint) => (
 
                 <tr
                   key={complaint._id}
