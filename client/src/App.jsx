@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Profile from "./pages/Profile";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Rooms from "./pages/Rooms";
-import MyRoom from "./pages/MyRoom";
-import Complaints from "./pages/Complaints";
-import AdminDashboard from "./pages/AdminDashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./pages/profile";
+import Login from "./pages/login";
+import Dashboard from "./pages/dashboard";
+import Rooms from "./pages/rooms";
+import MyRoom from "./pages/myRoom";
+import Complaints from "./pages/complaints";
+import AdminDashboard from "./pages/adminDashboard";
+import ProtectedRoute from "./components/protectedRoute";
 
 function App() {
   return (
