@@ -22,7 +22,7 @@ function Rooms() {
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-slate-100 p-8">
+      <div className="ml-64 min-h-screen bg-slate-100 p-8">
 
         <h1 className="text-4xl font-bold mb-8">
           All Rooms
