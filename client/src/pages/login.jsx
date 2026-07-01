@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
+import toast from "react-hot-toast";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -27,10 +28,10 @@ function Login() {
 
       navigate("/dashboard");
 
+      toast.success("Login Successful 🎉");
+
     } catch (error) {
-      setError(
-        error.response?.data?.message || "Login failed"
-      );
+      toast.error("Invalid email or password");
     } finally {
       setLoading(false);
     }

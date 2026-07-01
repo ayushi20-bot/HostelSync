@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
 import Navbar from "../components/navbar";
+import toast from "react-hot-toast";
 
 function Complaints() {
 
@@ -33,10 +34,11 @@ function Complaints() {
 
       fetchComplaints();
 
-      alert("Complaint Submitted");
+      toast.success("Complaint submitted successfully!");
 
     } catch (error) {
       console.log(error);
+      toast.error("Failed to submit complaint");
     }
   };
 

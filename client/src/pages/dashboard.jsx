@@ -10,15 +10,26 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
 } from "chart.js";
 
-import { Pie } from "react-chartjs-2";
+import { Pie, Bar } from "react-chartjs-2";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement
+);
 
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import Navbar from "../components/navbar";
+import Loading from "../components/Loading";
 
 function StatCard({ title, value, icon, color }) {
   return (
@@ -44,6 +55,7 @@ function Dashboard() {
   const [stats, setStats] = useState({});
   const [myRoom, setMyRoom] = useState(null);
   const [myComplaints, setMyComplaints] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const role = localStorage.getItem("role");
   const name = localStorage.getItem("name");
@@ -61,13 +73,20 @@ function Dashboard() {
           const complaintRes = await API.get("/complaints/my");
           setMyComplaints(complaintRes.data);
         }
+
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
 
     fetchDashboard();
   }, [role]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -210,6 +229,33 @@ function Dashboard() {
           </div>
 
         </div>
+        <div className="mt-8">
+        
+        {role === "admin" && (
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+
+              <h2 className="text-xl font-bold mb-6">
+                Room Occupancy
+              </h2>
+
+              <Bar
+                data={{
+                  labels: ["Occupied", "Vacant"],
+                  datasets: [
+                    {
+                      label: "Rooms",
+                      data: [
+                        stats.occupiedRooms,
+                        stats.vacantRooms,
+                      ],
+                    },
+                  ],
+                }}
+              />
+
+            </div>
+          )}
+          </div>
 
       </div>
     </>
