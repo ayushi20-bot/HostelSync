@@ -5,6 +5,17 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+import { Pie } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import Navbar from "../components/navbar";
@@ -164,6 +175,41 @@ function Dashboard() {
               ? "Monitor rooms, students, and complaints from one central dashboard."
               : "View your room details, track complaints, and stay updated with your hostel information."}
           </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+
+            <h2 className="text-xl font-bold mb-6">
+              Complaint Status
+            </h2>
+
+            <Pie
+              data={{
+                labels: ["Pending", "Resolved"],
+                datasets: [
+                  {
+                    data: [
+                      role === "admin"
+                        ? stats.pendingComplaints
+                        : myComplaints.filter(
+                            c => c.status === "pending"
+                          ).length,
+
+                      role === "admin"
+                        ? stats.resolvedComplaints
+                        : myComplaints.filter(
+                            c => c.status === "resolved"
+                          ).length,
+                    ],
+                  },
+                ],
+              }}
+            />
+
+          </div>
+
+        </div>
 
       </div>
     </>
