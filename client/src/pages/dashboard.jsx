@@ -1,6 +1,33 @@
+import {
+  FaUsers,
+  FaBed,
+  FaExclamationTriangle,
+  FaCheckCircle,
+} from "react-icons/fa";
+
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import Navbar from "../components/navbar";
+
+function StatCard({ title, value, icon, color }) {
+  return (
+    <div
+      className={`rounded-2xl shadow-lg p-6 text-white ${color}
+      hover:scale-105 transition duration-300`}
+    >
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-lg">{title}</h2>
+          <p className="text-4xl font-bold mt-2">{value}</p>
+        </div>
+
+        <div className="text-5xl opacity-80">
+          {icon}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Dashboard() {
   const [stats, setStats] = useState({});
@@ -50,105 +77,93 @@ function Dashboard() {
         {role === "admin" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">Total Students</h2>
-              <p className="text-4xl font-bold mt-2">
-                {stats.totalStudents}
-              </p>
-            </div>
+            <StatCard
+              title="Total Students"
+              value={stats.totalStudents}
+              icon={<FaUsers />}
+              color="bg-blue-600"
+            />
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">Total Rooms</h2>
-              <p className="text-4xl font-bold mt-2">
-                {stats.totalRooms}
-              </p>
-            </div>
+            <StatCard
+              title="Total Rooms"
+              value={stats.totalRooms}
+              icon={<FaBed />}
+              color="bg-purple-600"
+            />
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">Occupied Rooms</h2>
-              <p className="text-4xl font-bold mt-2">
-                {stats.occupiedRooms}
-              </p>
-            </div>
+            <StatCard
+              title="Occupied Rooms"
+              value={stats.occupiedRooms}
+              icon={<FaBed />}
+              color="bg-green-600"
+            />
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">Vacant Rooms</h2>
-              <p className="text-4xl font-bold mt-2">
-                {stats.vacantRooms}
-              </p>
-            </div>
+            <StatCard
+              title="Vacant Rooms"
+              value={stats.vacantRooms}
+              icon={<FaBed />}
+              color="bg-indigo-600"
+            />
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">Pending Complaints</h2>
-              <p className="text-4xl font-bold text-yellow-600 mt-2">
-                {stats.pendingComplaints}
-              </p>
-            </div>
+            <StatCard
+              title="Pending Complaints"
+              value={stats.pendingComplaints}
+              icon={<FaExclamationTriangle />}
+              color="bg-yellow-500"
+            />
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">Resolved Complaints</h2>
-              <p className="text-4xl font-bold text-green-600 mt-2">
-                {stats.resolvedComplaints}
-              </p>
-            </div>
+            <StatCard
+              title="Resolved Complaints"
+              value={stats.resolvedComplaints}
+              icon={<FaCheckCircle />}
+              color="bg-emerald-600"
+            />
 
           </div>
+
         )}
 
         {/* STUDENT DASHBOARD */}
         {role === "student" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">My Room</h2>
-              <p className="text-4xl font-bold mt-2">
-                {myRoom?.room?.roomNumber || "Not Assigned"}
-              </p>
-            </div>
+            <StatCard
+              title="My Room"
+              value={myRoom?.room?.roomNumber || "N/A"}
+              icon={<FaBed />}
+              color="bg-blue-600"
+            />
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">My Complaints</h2>
-              <p className="text-4xl font-bold mt-2">
-                {myComplaints.length}
-              </p>
-            </div>
+            <StatCard
+              title="Complaints"
+              value={myComplaints.length}
+              icon={<FaExclamationTriangle />}
+              color="bg-purple-600"
+            />
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">Pending</h2>
-              <p className="text-4xl font-bold text-yellow-600 mt-2">
-                {
-                  myComplaints.filter(
-                    (c) => c.status === "pending"
-                  ).length
-                }
-              </p>
-            </div>
+            <StatCard
+              title="Pending"
+              value={myComplaints.filter(c => c.status === "pending").length}
+              icon={<FaExclamationTriangle />}
+              color="bg-yellow-500"
+            />
 
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-gray-500">Resolved</h2>
-              <p className="text-4xl font-bold text-green-600 mt-2">
-                {
-                  myComplaints.filter(
-                    (c) => c.status === "resolved"
-                  ).length
-                }
-              </p>
-            </div>
+            <StatCard
+              title="Resolved"
+              value={myComplaints.filter(c => c.status === "resolved").length}
+              icon={<FaCheckCircle />}
+              color="bg-green-600"
+            />
 
           </div>
-        )}
 
-        <div className="bg-white rounded-2xl shadow-md p-6 mt-8">
-          <h2 className="text-2xl font-bold mb-3">
-            HostelSync
-          </h2>
+        )}
 
           <p className="text-gray-600">
             {role === "admin"
               ? "Monitor rooms, students, and complaints from one central dashboard."
               : "View your room details, track complaints, and stay updated with your hostel information."}
           </p>
-        </div>
 
       </div>
     </>
