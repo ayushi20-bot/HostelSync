@@ -95,8 +95,25 @@ const getRooms = async (req, res) => {
   }
 };
 
+const getStudents = async (req, res) => {
+  try {
+    const students = await User.find(
+      { role: "student", room: null },
+      "name email"
+    );
+
+    res.status(200).json(students);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
   addRoom,
   getRooms,
-  allocateRoom
+  allocateRoom,
+  getStudents
 };

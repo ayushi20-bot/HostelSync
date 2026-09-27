@@ -1,5 +1,6 @@
 const Complaint = require("../models/Complaint");
 const User = require("../models/User");
+const Room = require("../models/Room");
 
 const createComplaint = async (req, res) => {
   try {
@@ -43,11 +44,32 @@ const getMyComplaints = async (req, res) => {
 const getAllComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find()
-      .populate("student", "name email")
+      .populate("student", "name email room")
       .populate("room", "roomNumber")
       .sort({ createdAt: -1 });
 
-    res.status(200).json(complaints);
+    const updatedComplaints = await Promise.all(
+      complaints.map(async (complaint) => {
+
+        if (
+          complaint.student &&
+          complaint.student.room
+        ) {
+          const room = await require("../models/Room").findById(
+            complaint.student.room
+          );
+
+          return {
+            ...complaint.toObject(),
+            room
+          };
+        }
+
+        return complaint;
+      })
+    );
+
+    res.status(200).json(updatedComplaints);
 
   } catch (error) {
     res.status(500).json({

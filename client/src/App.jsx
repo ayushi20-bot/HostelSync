@@ -7,6 +7,7 @@ import MyRoom from "./pages/myRoom";
 import Complaints from "./pages/complaints";
 import AdminDashboard from "./pages/adminDashboard";
 import ProtectedRoute from "./components/protectedRoute";
+import Register from "./pages/register";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
 
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route
           path="/dashboard"

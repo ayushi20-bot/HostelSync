@@ -27,7 +27,7 @@ function Navbar() {
 
     {
       name: "Complaints",
-      path: "/complaints",
+      path: role === "admin" ? "/admin" : "/complaints",
       icon: <FaExclamationCircle />,
     },
 

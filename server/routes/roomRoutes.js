@@ -6,7 +6,8 @@ const protect = require("../middleware/authMiddleware");
 const {
   addRoom,
   getRooms,
-  allocateRoom
+  allocateRoom,
+  getStudents
 } = require("../controllers/roomController");
 
 router.post("/", protect, addRoom);
@@ -14,5 +15,7 @@ router.post("/", protect, addRoom);
 router.get("/", protect, getRooms);
 
 router.put("/allocate", protect, allocateRoom);
+
+router.get("/students", protect, getStudents);
 
 module.exports = router;
