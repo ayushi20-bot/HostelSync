@@ -5,32 +5,34 @@ import API from "../services/api";
 function AdminDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+
+  // Fetch complaints
+  const fetchComplaints = async () => {
+    try {
+      const res = await API.get("/complaints");
+      setComplaints(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchComplaints = async () => {
-      try {
-        const res = await API.get("/complaints");
-        setComplaints(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const updateStatus = async (id, status) => {
-      try {
-        await API.put(`/complaints/${id}`, {
-          status,
-        });
-
-        const res = await API.get("/complaints");
-        setComplaints(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     fetchComplaints();
   }, []);
+
+  // Update complaint status
+  const updateStatus = async (id, status) => {
+    try {
+      await API.put(`/complaints/${id}`, {
+        status,
+      });
+
+      fetchComplaints();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const totalComplaints = complaints.length;
 
@@ -42,14 +44,20 @@ function AdminDashboard() {
     (c) => c.status === "resolved"
   ).length;
 
+  // Search + status filter
   const filteredComplaints = complaints.filter((complaint) => {
     const searchText = search.toLowerCase();
 
-    return (
-      complaint.title.toLowerCase().includes(searchText) ||
-      complaint.student?.name.toLowerCase().includes(searchText) ||
-      complaint.room?.roomNumber.toLowerCase().includes(searchText)
-    );
+    const matchesSearch =
+      complaint.title?.toLowerCase().includes(searchText) ||
+      complaint.student?.name?.toLowerCase().includes(searchText) ||
+      complaint.room?.roomNumber?.toLowerCase().includes(searchText);
+
+    const matchesStatus =
+      statusFilter === "All" ||
+      complaint.status === statusFilter.toLowerCase();
+
+    return matchesSearch && matchesStatus;
   });
 
   return (
@@ -62,27 +70,37 @@ function AdminDashboard() {
           Admin Dashboard
         </h1>
 
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="🔍 Search by title, student or room..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-96 border rounded-lg p-3 shadow-sm"
-        />
-      </div>
+        {/* Search + Filter */}
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
 
-      <select>
-        <option>All</option>
-        <option>Pending</option>
-        <option>Resolved</option>
-      </select>
+          <input
+            type="text"
+            placeholder="🔍 Search by title, student or room..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full md:w-96 border rounded-lg p-3 shadow-sm"
+          />
 
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border rounded-lg p-3 shadow-sm bg-white"
+          >
+            <option value="All">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+
+        </div>
+
+        {/* Complaint Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <p className="text-gray-500">Total Complaints</p>
-            <h2 className="text-4xl font-bold">{totalComplaints}</h2>
+            <h2 className="text-4xl font-bold">
+              {totalComplaints}
+            </h2>
           </div>
 
           <div className="bg-white rounded-2xl shadow-lg p-6">
@@ -101,26 +119,35 @@ function AdminDashboard() {
 
         </div>
 
+        {/* Complaints Table */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
 
           <table className="w-full">
 
             <thead className="bg-slate-900 text-white">
-
               <tr>
 
-                <th className="p-4 text-left">Title</th>
+                <th className="p-4 text-left">
+                  Title
+                </th>
 
-                <th className="p-4 text-left">Student</th>
+                <th className="p-4 text-left">
+                  Student
+                </th>
 
-                <th className="p-4 text-left">Room</th>
+                <th className="p-4 text-left">
+                  Room
+                </th>
 
-                <th className="p-4 text-left">Status</th>
+                <th className="p-4 text-left">
+                  Status
+                </th>
 
-                <th className="p-4 text-left">Action</th>
+                <th className="p-4 text-left">
+                  Action
+                </th>
 
               </tr>
-
             </thead>
 
             <tbody>
@@ -137,11 +164,11 @@ function AdminDashboard() {
                   </td>
 
                   <td className="p-4">
-                    {complaint.student?.name}
+                    {complaint.student?.name || "N/A"}
                   </td>
 
                   <td className="p-4">
-                    {complaint.room?.roomNumber}
+                    {complaint.room?.roomNumber || "N/A"}
                   </td>
 
                   <td className="p-4">
@@ -170,6 +197,7 @@ function AdminDashboard() {
                       }
                       className="border rounded-lg p-2"
                     >
+
                       <option value="pending">
                         Pending
                       </option>
@@ -185,6 +213,17 @@ function AdminDashboard() {
                 </tr>
 
               ))}
+
+              {filteredComplaints.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="p-8 text-center text-gray-500"
+                  >
+                    No complaints found.
+                  </td>
+                </tr>
+              )}
 
             </tbody>
 

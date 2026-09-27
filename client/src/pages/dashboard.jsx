@@ -189,7 +189,7 @@ function Dashboard() {
 
         )}
 
-          <p className="text-gray-600">
+          <p className="text-gray-600 mt-8">
             {role === "admin"
               ? "Monitor rooms, students, and complaints from one central dashboard."
               : "View your room details, track complaints, and stay updated with your hostel information."}
